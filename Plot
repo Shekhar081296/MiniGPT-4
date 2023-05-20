@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+sigma_f_max = 100  # MPa
+diameter = 20  # μm
+radius = diameter / 2
+a = 5  # μm
+L = 100  # μm
+
+# Calculate load-transfer length
+Lc = (2 * (a - L + L * np.log(L / a))) / a
+
+# Define the range of distances along the fiber length
+r_values = np.linspace(0, L, num=100)
+
+# Calculate the fiber stress (sigma_f) and interfacial stress (tau)
+sigma_f = np.piecewise(r_values, [r_values <= Lc, r_values > Lc], [sigma_f_max, 0])
+tau = (sigma_f_max / a) * (r_values - a)
+
+# Plotting
+plt.plot(r_values, sigma_f, label='Fiber Stress (σf)')
+plt.plot(r_values, tau, label='Interfacial Stress (τ)')
+plt.axvline(x=Lc, color='r', linestyle='--', label='Load-Transfer Length (Lc)')
+plt.xlabel('Distance along Fiber Length (μm)')
+plt.ylabel('Stress (MPa)')
+plt.title('Stress Distribution along Fiber Length')
+plt.legend()
+plt.grid(True)
+plt.show()
